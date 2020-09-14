@@ -38,7 +38,7 @@ func sortKeys(data AccountMap) []string {
 // findIntersection finds the set of strings from both arrays that are equivalent
 // a and b must first be sorted
 // this is used to find which keys have been both "deleted" and "created" i.e. they were updated
-func findIntersection(a, b []string) []string {
+func FindIntersection(a, b []string) []string {
 	lenA := len(a)
 	lenB := len(b)
 	iOfA, iOfB := 0, 0

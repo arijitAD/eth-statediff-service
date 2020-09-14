@@ -250,7 +250,7 @@ func (sdb *builder) buildStateDiff(args []iterPair, params Params) ([]StateNode,
 	// these are the leafkeys for the accounts which exist at both A and B but are different
 	// this also mutates the passed in createKeys and deleteKeys, removing the intersection keys
 	// and leaving the truly created or deleted keys in place
-	updatedKeys := findIntersection(createKeys, deleteKeys)
+	updatedKeys := FindIntersection(createKeys, deleteKeys)
 
 	// build the diff nodes for the updated accounts using the mappings at both A and B
 	// as directed by the keys found as the intersection of the two
