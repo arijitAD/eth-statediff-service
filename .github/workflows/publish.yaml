@@ -9,10 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Get the version
-        id: vars
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})
-          echo ::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})
+        id: vars
       - name: Docker Login
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login https://docker.pkg.github.com -u vulcanize --password-stdin
       - name: Build and push
@@ -22,4 +21,4 @@ jobs:
           push: true
           tags: vulcanize/eth-statediff-service:${{ steps.vars.outputs.tag }}
           build-args: |
-            BRANCH=${{ steps.vars.outputs.branch }}
+            BRANCH= $CI_COMMIT_REF_NAME
