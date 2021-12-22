@@ -8,17 +8,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get branch names
+        uses: tj-actions/branch-names@v2.1
+        id: branch-names
+
+      - name: Print environment variables exposed by GitHub
+        run: |
+          echo "GITHUB_ACTOR=$GITHUB_ACTOR"
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "GITHUB_TAGS=${GITHUB_REF#refs/tags/}"
+          echo "GITHUB_HEADS=${GITHUB_REF#refs/heads/}"
+          echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")"
+          echo "git_head_ref=${github.head_ref}"
+          echo "CURRENT_BRANCH=${{ steps.branch-name.outputs.current_branch }}"
+          echo "REF_BRANCH=${{ steps.branch-name.outputs.ref_branch }}"
+          echo "${{ steps.branch-name.outputs.head_ref_branch }}"
+          echo "${{ steps.branch-name.outputs.base_ref_branch }}"
+          echo "Pull request's base branch is: ${BASE_BRANCH}"
+          echo ${{ github.event.pull_request.title }}
+          echo "GITHUB_NEW_REF=${GITHUB_REF##*/}"
+          echo "GITHUB_HEAD_REF=$GITHUB_HEAD_REF"
+          echo "GITHUB_BASE_REF=$GITHUB_BASE_REF"
+          echo "GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME"
+          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
+          echo "GITHUB_RUN_NUMBER=$GITHUB_RUN_NUMBER"
+          echo "GITHUB_WORKFLOW=$GITHUB_WORKFLOW"
+          echo "GITHUB_ACTION=$GITHUB_ACTION"
       - name: Get the version
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "REF=${GITHUB_REF##*/}"
+          echo "REF_HEAD=${GITHUB_REF#refs/heads/})"
         id: vars
-      - name: Docker Login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login https://docker.pkg.github.com -u vulcanize --password-stdin
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          username: tikarya
+          password: docker-hub
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: vulcanize/eth-statediff-service:${{ steps.vars.outputs.tag }}
+          tags: tikarya/eth-statediff-service:${{ steps.vars.outputs.tag }}
           build-args: |
-            BRANCH= $CI_COMMIT_REF_NAME
+            GIT_COMMIT=$GITHUB_SHA
