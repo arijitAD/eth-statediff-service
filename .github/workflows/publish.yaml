@@ -26,4 +26,3 @@ jobs:
           tags: tikarya/eth-statediff-service:${{ steps.vars.outputs.tag }}
           build-args: |
             GIT_COMMIT=${{ steps.vars.outputs.sha }}
-

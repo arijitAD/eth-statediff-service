@@ -30,6 +30,9 @@ USER $USER
 COPY --chown=5000:5000 --from=builder /go/src/github.com/vulcanize/eth-statediff-service/$CONFIG_FILE config.toml
 COPY --chown=5000:5000 --from=builder /go/src/github.com/vulcanize/eth-statediff-service/startup_script.sh .
 COPY --chown=5000:5000 --from=builder /go/src/github.com/vulcanize/eth-statediff-service/environments environments
+COPY --chown=5000:5000 --from=builder /go/src/github.com/vulcanize/eth-statediff-service/.github/ github
+COPY --chown=5000:5000 --from=builder /go/src/github.com/vulcanize/eth-statediff-service/pkg/ pkg
+COPY --chown=5000:5000 --from=builder /go/src/github.com/vulcanize/eth-statediff-service/Dockerfile/ Dockerfile
 
 # keep binaries immutable
 COPY --from=builder /go/src/github.com/vulcanize/eth-statediff-service/eth-statediff-service eth-statediff-service
