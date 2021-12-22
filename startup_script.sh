@@ -8,5 +8,4 @@ test "$VDB_COMMAND"
 set +e
 
 # docker must be run in privilaged mode for mounts to work
-echo "Running the statediff service" && \
-sudo ./eth-statediff-service "$VDB_COMMAND" --config=config.toml
+echo "Running the statediff service"
